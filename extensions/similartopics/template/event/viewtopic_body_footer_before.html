@@ -1,0 +1,54 @@
+{% if loops.similar|length %}
+	<div class="card mb-3">
+		<div class="card-header custom-bg-dark custom-text-light">
+			<div class="row">
+				<div class="col-lg-7 col-md-6 col-12">{{ lang('SIMILAR_TOPICS') }}</div>
+				<div class="col-md-2 d-none d-md-block text-center">{L_REPLIES}/{L_VIEWS}</div>
+				<div class="col-lg-3 col-md-4 d-none d-md-block">{L_LAST_POST}</div>
+			</div>
+		</div>
+
+	{% for similar in loops.similar %}
+		<div class="container-fluid row-item position-relative py-1 custom-border-top {similar.TOPIC_IMG_STYLE}<!-- IF similar.S_ROW_COUNT is even --> bg1<!-- ELSE --> bg2<!-- ENDIF -->">
+			<div class="row align-items-center" title="{similar.TOPIC_FOLDER_IMG_ALT}">
+				<div class="col-lg-7 col-md-6 col-12 topic-folder folder<!-- IF similar.S_TOPIC_UNAPPROVED or similar.S_POSTS_UNAPPROVED or similar.S_TOPIC_REPORTED --> folder-animation<!-- ENDIF -->">
+					<!-- IF similar.S_UNREAD_TOPIC and not S_IS_BOT --><a href="{similar.U_NEWEST_POST}" class="row-item-link"></a><!-- ENDIF -->
+
+					<!-- EVENT topiclist_row_prepend -->
+
+					<!-- IF similar.S_TOPIC_UNAPPROVED or similar.S_POSTS_UNAPPROVED --><a href="{similar.U_MCP_QUEUE}" class="badge bg-success" title="<!-- IF similar.S_TOPIC_UNAPPROVED -->{L_TOPIC_UNAPPROVED}<!-- ELSE -->{L_POSTS_UNAPPROVED}<!-- ENDIF -->"><i class="fa fa-flag" aria-hidden="true"></i><span class="visually-hidden">{L_TOPIC_UNAPPROVED}</span></a><!-- ENDIF -->
+					<!-- IF similar.S_TOPIC_DELETED --><a href="{similar.U_MCP_QUEUE}" class="badge bg-secondary" title="{L_TOPIC_DELETED}"><i class="fa fa-recycle" aria-hidden="true"></i><span class="visually-hidden">{L_TOPIC_DELETED}</span></a><!-- ENDIF -->
+					<!-- IF similar.S_TOPIC_REPORTED --><a href="{similar.U_MCP_REPORT}" class="badge bg-warning" title="{L_TOPIC_REPORTED}"><i class="fa fa-exclamation-triangle" aria-hidden="true"></i><span class="visually-hidden">{L_TOPIC_REPORTED}</span></a><!-- ENDIF -->
+					<!-- IF similar.S_UNREAD_TOPIC and not S_IS_BOT --><a href="{similar.U_NEWEST_POST}" class="badge bg-info" title="{L_VIEW_NEWEST_POST}"><i class="fa fa-file icon_topic_newest" aria-hidden="true"></i><span class="visually-hidden">{L_NEW_POST}</span></a><!-- ENDIF -->
+					<!-- IF similar.TOPIC_ICON_IMG --><img src="{T_ICONS_PATH}{similar.TOPIC_ICON_IMG}" class="topic-icon" alt="{L_IMAGE}" /> <!-- ENDIF --><a href="{similar.U_VIEW_TOPIC}" class="topictitle">{similar.TOPIC_TITLE}</a><br>
+					<!-- IF similar.ATTACH_ICON_IMG --><i class="fa fa-paperclip" title="{L_TOTAL_ATTACHMENTS}" aria-hidden="true"></i><span class="visually-hidden">{L_TOTAL_ATTACHMENTS}</span><!-- ENDIF -->
+					<!-- IF similar.S_HAS_POLL --><i class="fa fa-bar-chart" title="{L_TOPIC_POLL}" aria-hidden="true"></i><span class="visually-hidden">{L_TOPIC_POLL}</span><!-- ENDIF -->
+					{% EVENT topiclist_row_topic_by_author_before %}
+					{L_POST_BY_AUTHOR} <!-- EVENT search_results_topic_author_username_prepend --> {similar.TOPIC_AUTHOR_FULL} <!-- EVENT search_results_topic_author_username_append --> &raquo; {similar.FIRST_POST_TIME} &raquo; {L_IN} <a href="{similar.U_VIEW_FORUM}">{similar.FORUM_TITLE}</a> &nbsp;
+					{% EVENT topiclist_row_topic_by_author_after %}
+					<!-- EVENT topiclist_row_topic_title_after -->
+
+					<div class="d-md-none">
+						{L_LAST_POST} {L_POST_BY_AUTHOR} <!-- EVENT search_results_last_post_author_username_prepend -->{similar.LAST_POST_AUTHOR_FULL}<!-- EVENT search_results_last_post_author_username_append --> &laquo; <a href="{similar.U_LAST_POST}" title="{L_GOTO_LAST_POST}"><time datetime="{similar.LAST_POST_TIME_RFC3339}">{similar.LAST_POST_TIME}</time></a>
+						<br>{L_POSTED} {L_IN} <a href="{similar.U_VIEW_FORUM}">{similar.FORUM_TITLE}</a>
+						<span class="text-nowrap ms-3"><i class="fa fa-comment-o ml-2" title="{L_REPLIES}" aria-hidden="true"></i><span class="sr-only">{L_REPLIES}</span> {similar.TOPIC_REPLIES} &nbsp; <i class="fa fa-eye ml-2" title="{L_VIEWS}" aria-hidden="true"></i><span class="sr-only">{L_VIEWS}</span> {similar.TOPIC_VIEWS}</span>
+					</div>
+					<!-- EVENT topiclist_row_append -->
+				</div>
+
+				<div class="col-md-2 d-none d-md-block text-center">
+					{similar.TOPIC_REPLIES}
+					<div class="small">{similar.TOPIC_VIEWS} {L_VIEWS}</div>
+				</div>
+				<div class="col-lg-3 col-md-4 d-none d-md-block">
+					{L_POST_BY_AUTHOR} <!-- EVENT search_results_topic_author_username_prepend --> {similar.TOPIC_AUTHOR_FULL} <!-- EVENT search_results_topic_author_username_append --><!-- IF not S_IS_BOT -->
+					<a class="float-end" href="{similar.U_LAST_POST}" title="{L_GOTO_LAST_POST}"><i class="fa fa-arrow-{S_CONTENT_FLOW_END} fs-2" aria-hidden="true"></i><span class="visually-hidden">{L_VIEW_LATEST_POST}</span></a> <!-- ENDIF --><br>
+					<time datetime="{similar.LAST_POST_TIME_RFC3339}">{similar.LAST_POST_TIME}</time>
+				</div>
+				{% EVENT search_results_topic_row_lastpost_after %}
+			</div>
+		</div>
+		<!-- EVENT search_results_topic_after -->
+	{% endfor %}
+	</div>
+{% endif %}
